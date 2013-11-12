@@ -4,7 +4,8 @@ class Devise::Oauth2Providable::AccessToken < ActiveRecord::Base
   before_validation :restrict_expires_at, :on => :create, :if => :refresh_token
   belongs_to :refresh_token
 
-  attr_accessible :refresh_token
+  # Deprecated
+  #attr_accessible :refresh_token
 
   def token_response
     response = {

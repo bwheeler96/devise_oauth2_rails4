@@ -9,7 +9,8 @@ class Devise::Oauth2Providable::Client < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :identifier, :presence => true, :uniqueness => true
 
-  attr_accessible :name, :website, :redirect_uri
+  # Deprecated
+  #attr_accessible :name, :website, :redirect_uri
 
   private
 

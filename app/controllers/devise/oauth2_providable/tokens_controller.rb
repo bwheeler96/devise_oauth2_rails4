@@ -7,7 +7,9 @@ class Devise::Oauth2Providable::TokensController < ApplicationController
     @access_token = @refresh_token.access_tokens.create!(:client => oauth2_current_client, :user => current_user)
     render :json => @access_token.token_response
   end
+
   private
+
   def oauth2_current_client
    env[Devise::Oauth2Providable::CLIENT_ENV_REF]
   end
