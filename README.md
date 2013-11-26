@@ -18,7 +18,7 @@ the request.  http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-04
 ## Requirements
 
 * Devise authentication library
-* Rails 3.1 or higher
+* Rails 4.0.0 or higher
 
 ## Installation
 
