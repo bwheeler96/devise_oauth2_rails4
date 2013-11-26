@@ -1,5 +1,5 @@
 Ryan Sonnek - Original Author
-
+Brian Wheeler - Rails 4 Version Adopter
 
 Complete list of contributors:
 https://github.com/socialcast/devise_oauth2_providable/contributors
