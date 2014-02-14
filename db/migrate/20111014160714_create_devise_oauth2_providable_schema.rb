@@ -6,6 +6,7 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
       t.string :website
       t.string :identifier
       t.string :secret
+      t.boolean :passthrough, default: false, null: false
       t.timestamps
     end
     change_table :oauth2_clients do |t|
