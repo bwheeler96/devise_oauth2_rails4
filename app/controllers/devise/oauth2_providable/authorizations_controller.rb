@@ -61,8 +61,11 @@ module Devise
       end
     
       def set_client
-        @client = Client.find_by_identifier(req.client_id) || req.bad_request!
+				Rack::OAuth2::Server::Authorize.new do |req, res|
+	        @client = Client.find_by_identifier(req.client_id) || req.bad_request!
+				end
       end
+
     end
   end
 end
