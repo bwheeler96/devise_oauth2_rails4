@@ -1,7 +1,9 @@
 module Devise
   module Oauth2Providable
     class AuthorizationsController < ApplicationController
-      before_filter :authenticate_user!
+
+      before_action :authenticate_user!
+      before_action :set_client
 
       rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|
         @error = e
@@ -9,6 +11,10 @@ module Devise
       end
 
       def new
+        if @client.passthrough?
+          params[:approve] = true
+          respond *authorize_endpoint(:allow_approval).call(request.env)
+        end
         respond *authorize_endpoint.call(request.env)
       end
 
@@ -31,7 +37,6 @@ module Devise
 
       def authorize_endpoint(allow_approval = false)
         Rack::OAuth2::Server::Authorize.new do |req, res|
-          @client = Client.find_by_identifier(req.client_id) || req.bad_request!
           res.redirect_uri = @redirect_uri = req.verify_redirect_uri!(@client.redirect_uri)
           if allow_approval
             if params[:approve].present?
@@ -53,6 +58,10 @@ module Devise
             @response_type = req.response_type
           end
         end
+      end
+    
+      def set_client
+        @client = Client.find_by_identifier(req.client_id) || req.bad_request!
       end
     end
   end
