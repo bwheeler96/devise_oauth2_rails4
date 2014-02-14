@@ -11,6 +11,7 @@ module Devise
       end
 
       def new
+				@client = set_client
         if @client.passthrough?
           params[:approve] = true
           respond *authorize_endpoint(:allow_approval).call(request.env)
@@ -62,8 +63,8 @@ module Devise
     
       def set_client
 				Rack::OAuth2::Server::Authorize.new do |req, res|
-	        @client = Client.find_by_identifier(req.client_id)
-					req.bad_request! unless @client
+	        @client = Client.find_by_identifier(req.client_id) || req.bad_request!
+					return @client
 				end
       end
 
