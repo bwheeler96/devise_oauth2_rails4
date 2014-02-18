@@ -11,11 +11,11 @@ module Devise
       end
 
       def new
-				@client = set_client
-				Rack::OAuth2::Server::Authorize.new do |req| req.bad_request! end
+        @client = set_client
         if @client.passthrough?
           params[:approve] = true
           respond *authorize_endpoint(:allow_approval).call(request.env)
+          return
         end
         respond *authorize_endpoint.call(request.env)
       end
