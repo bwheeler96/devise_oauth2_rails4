@@ -3,7 +3,6 @@ module Devise
     class AuthorizationsController < ApplicationController
 
       before_action :authenticate_user!
-      before_action :set_client
 
       rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|
         @error = e
@@ -11,16 +10,11 @@ module Devise
       end
 
       def new
-        if @client.passthrough? && !params[:passthrough]
-          params[:approve] = true
-          respond *authorize_endpoint(:allow_approval).call(request.env)
-        else
-          respond *authorize_endpoint.call(request.env)
-        end
+        authorize_endpoint
       end
 
       def create
-        respond *authorize_endpoint(:allow_approval).call(request.env)
+        authorize_endpoint(:allow_approval)
       end
 
       private
@@ -37,36 +31,35 @@ module Devise
       end
 
       def authorize_endpoint(allow_approval = false)
-        Rack::OAuth2::Server::Authorize.new do |req, res|
-          res.redirect_uri = @redirect_uri = req.verify_redirect_uri!(@client.redirect_uri)
-          if allow_approval
-            if params[:approve].present?
-              case req.response_type
-              when :code
-                authorization_code = current_user.authorization_codes.create!(:client => @client)
-                res.code = authorization_code.token
-              when :token
-                access_token = current_user.access_tokens.create!(:client => @client).token
-                bearer_token = Rack::OAuth2::AccessToken::Bearer.new(:access_token => access_token)
-                res.access_token = bearer_token
-                # res.uid = current_user.id
+        authorization = Rack::OAuth2::Server::Authorize.new do |req, res|
+          @client = Client.find_by_identifier(req.client_id) || req.bad_request!
+
+          if @client
+            res.redirect_uri = @redirect_uri = req.verify_redirect_uri!(@client.redirect_uri)
+
+            if allow_approval || @client.passthrough?
+              if params[:approve].present? || @client.passthrough?
+                case req.response_type
+                  when :code
+                    authorization_code = current_user.authorization_codes.create!(:client => @client)
+                    res.code = authorization_code.token
+                  when :token
+                    access_token = current_user.access_tokens.create!(:client => @client).token
+                    bearer_token = Rack::OAuth2::AccessToken::Bearer.new(:access_token => access_token)
+                    res.access_token = bearer_token
+                    # res.uid = current_user.id
+                end
+                res.approve!
+              else
+                req.access_denied!
               end
-              res.approve!
             else
-              req.access_denied!
+              @response_type = req.response_type
             end
-          else
-            @response_type = req.response_type
           end
         end
-      end
-    
-      def set_client
-        @client = Client.new
-        Rack::OAuth2::Server::Authorize.new do |req, res|
-          @client = Client.find_by_identifier(req.client_id) || req.bad_request! # if @client.nil?
-        end
-				return @client
+
+        respond *authorization.call(request.env)
       end
 
     end
