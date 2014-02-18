@@ -11,8 +11,8 @@ module Devise
       end
 
       def new
-        @client = set_client
-        if @client.passthrough?
+        #@client = Client.first
+        #if @client.passthrough?
           params[:approve] = true
           respond *authorize_endpoint(:allow_approval).call(request.env)
           return
