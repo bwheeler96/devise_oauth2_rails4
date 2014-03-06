@@ -1,8 +1,7 @@
 class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
   def change
     create_table :oauth2_clients do |t|
-      t.string :owner_type
-      t.integer :owner
+      t.belongs_to :owner, polymorphic: true
       t.string :redirect_uri
       t.string :identifier
       t.string :secret
@@ -14,8 +13,7 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
     end
 
     create_table :oauth2_access_tokens do |t|
-      t.string :owner_type
-      t.integer :owner_id
+      t.belongs_to :owner, polymorphic: true
       t.integer :client_id
       t.integer :refresh_token_id
       t.string :token
@@ -25,12 +23,13 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
     change_table :oauth2_access_tokens do |t|
       t.index :token, :unique => true
       t.index :expires_at
-      t.index :user_id
+      t.index :owner_id
       t.index :client_id
     end
 
     create_table :oauth2_refresh_tokens do |t|
-      t.belongs_to :user, :client
+      t.belongs_to :owner, polymorphic: true
+      t.belongs_to :client
       t.string :token
       t.datetime :expires_at
       t.timestamps
@@ -38,12 +37,13 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
     change_table :oauth2_refresh_tokens do |t|
       t.index :token, :unique => true
       t.index :expires_at
-      t.index :user_id
+      t.index :owner_id
       t.index :client_id
     end
 
     create_table :oauth2_authorization_codes do |t|
-      t.belongs_to :user, :client
+      t.belongs_to :owner, polymorphic: true
+      t.belongs_to :client
       t.string :token
       t.datetime :expires_at
       t.timestamps
@@ -51,7 +51,7 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
     change_table :oauth2_authorization_codes do |t|
       t.index :token, :unique => true
       t.index :expires_at
-      t.index :user_id
+      t.index :owner_id
       t.index :client_id
     end
   end

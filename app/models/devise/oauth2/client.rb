@@ -1,4 +1,5 @@
 class Devise::Oauth2::Client < ActiveRecord::Base
+
   has_many :access_tokens
   has_many :refresh_tokens
   has_many :authorization_codes
