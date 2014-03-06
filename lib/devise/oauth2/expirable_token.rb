@@ -2,7 +2,7 @@ require 'active_support/concern'
 require 'active_record'
 
 module Devise
-  module Oauth2Providable
+  module OAuth2
     module ExpirableToken
       extend ActiveSupport::Concern
 

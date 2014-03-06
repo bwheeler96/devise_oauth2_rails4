@@ -2,5 +2,6 @@ Ryan Sonnek - Original Author
 Brian Wheeler - Rails 4 Version Adopter
 
 Complete list of contributors:
+https://github.com/bwheeler96/devise_oauth2_rails4/contibutors
 https://github.com/socialcast/devise_oauth2_providable/contributors
 

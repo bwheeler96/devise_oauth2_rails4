@@ -1,5 +1,5 @@
 module Devise
-  module Oauth2Providable
+  module OAuth2
     class Engine < Rails::Engine
       config.devise_oauth2_providable = ActiveSupport::OrderedOptions.new
       config.devise_oauth2_providable.access_token_expires_in       = 15.minutes

@@ -1,5 +1,5 @@
 module Devise
-  module Oauth2Providable
+  module OAuth2
     VERSION = "1.1.2"
   end
 end
