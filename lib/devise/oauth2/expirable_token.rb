@@ -2,7 +2,7 @@ require 'active_support/concern'
 require 'active_record'
 
 module Devise
-  module OAuth2
+  module Oauth2
     module ExpirableToken
       extend ActiveSupport::Concern
 
@@ -45,7 +45,7 @@ module Devise
         private
 
         def init_token
-          self.token = Devise::OAuth2.random_id
+          self.token = Devise::Oauth2.random_id
         end
         def init_expires_at
           self.expires_at = self.default_lifetime.from_now
@@ -55,4 +55,4 @@ module Devise
   end
 end
 
-ActiveRecord::Base.send :include, Devise::OAuth2::ExpirableToken
+ActiveRecord::Base.send :include, Devise::Oauth2::ExpirableToken

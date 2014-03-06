@@ -21,7 +21,7 @@ describe Devise::Strategies::Oauth2PasswordGrantTypeStrategy do
         it { response.code.to_i.should == 200 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2Providable::AccessToken.last
+          token = Devise::Oauth2::AccessToken.last
           expected = token.token_response
           response.body.should match_json(expected)
         end
@@ -44,7 +44,7 @@ describe Devise::Strategies::Oauth2PasswordGrantTypeStrategy do
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
           puts response.body
-          token = Devise::Oauth2Providable::AccessToken.last
+          token = Devise::Oauth2::AccessToken.last
           expected = token.token_response
           response.body.should match_json(expected)
         end

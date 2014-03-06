@@ -20,7 +20,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         it { response.code.to_i.should == 200 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2Providable::AccessToken.last
+          token = Devise::Oauth2::AccessToken.last
           refresh_token = @refresh_token
           expected = {
             :token_type => 'bearer',
@@ -75,7 +75,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2Providable::AccessToken.last
+          token = Devise::Oauth2::AccessToken.last
           refresh_token = @refresh_token
           expected = {
             :error => 'invalid_grant',

@@ -1,4 +1,4 @@
-require 'devise/oauth2_providable/strategies/oauth2_grant_type_strategy'
+require 'devise/oauth2/strategies/oauth2_grant_type_strategy'
 
 module Devise
   module Strategies
@@ -9,7 +9,7 @@ module Devise
 
       def authenticate_grant_type(client)
         if refresh_token = client.refresh_tokens.find_by_token(params[:refresh_token])
-          env[Devise::OAuth2::REFRESH_TOKEN_ENV_REF] = refresh_token
+          env[Devise::Oauth2::REFRESH_TOKEN_ENV_REF] = refresh_token
           success! refresh_token.user
         else
           oauth_error! :invalid_grant, 'invalid refresh token'

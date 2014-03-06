@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Devise::Oauth2Providable::AuthorizationsController do
+describe Devise::Oauth2::AuthorizationsController do
   describe 'routing' do
     pending 'routes POST /oauth2/authorizations' do
       post('/oauth2/authorizations').should route_to('devise/oauth2_providable/authorizations#create')

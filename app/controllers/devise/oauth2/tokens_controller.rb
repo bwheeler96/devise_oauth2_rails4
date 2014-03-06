@@ -1,5 +1,5 @@
 module Devise
-  module OAuth2
+  module Oauth2
     class TokensController < ApplicationController
       before_action :authenticate_user!
       skip_before_action :verify_authenticity_token, :only => :create

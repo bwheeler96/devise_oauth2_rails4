@@ -20,8 +20,8 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
         it { response.code.to_i.should == 200 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2Providable::AccessToken.last
-          refresh_token = Devise::Oauth2Providable::RefreshToken.last
+          token = Devise::Oauth2::AccessToken.last
+          refresh_token = Devise::Oauth2::RefreshToken.last
           expected = {
             :token_type => 'bearer',
             :expires_in => 899,

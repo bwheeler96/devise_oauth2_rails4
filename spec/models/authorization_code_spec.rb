@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Devise::Oauth2Providable::AuthorizationCode do
+describe Devise::Oauth2::AuthorizationCode do
   describe 'basic authorization code instance' do
     with :client
     subject do
-      Devise::Oauth2Providable::AuthorizationCode.create! :client => client
+      Devise::Oauth2::AuthorizationCode.create! :client => client
     end
     it { should validate_presence_of :token }
     it { should validate_uniqueness_of :token }

@@ -6,7 +6,7 @@ describe ProtectedController do
     with :client
     with :user
     before do
-      @token = Devise::Oauth2Providable::AccessToken.create! :client => client, :user => user
+      @token = Devise::Oauth2::AccessToken.create! :client => client, :user => user
     end
     context 'with valid bearer token in header' do
       before do

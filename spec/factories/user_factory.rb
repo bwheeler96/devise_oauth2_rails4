@@ -1,4 +1,4 @@
-Factory.define :user do |f|
-  f.email 'ryan@socialcast.com'
-  f.password 'test'
-end
+#FactoryGirl.register_factory :user do |f|
+#  f.email 'ryan@socialcast.com'
+#  f.password 'test'
+#end

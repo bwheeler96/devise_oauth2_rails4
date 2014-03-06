@@ -25,7 +25,7 @@ the request.  http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-04
 #### Install gem
 ```ruby
 # Gemfile
-gem 'devise_oauth2_providable'
+gem 'devise_oauth2_rails4'
 ```
 
 #### Migrate database for Oauth2 models
@@ -39,7 +39,7 @@ $ rake db:migrate
 # config/routes.rb
 Rails.application.routes.draw do
   # oauth routes can be mounted to any path (ex: /oauth2 or /oauth)
-  mount Devise::Oauth2Providable::Engine => '/oauth2'
+  mount Devise::Oauth2::Engine => '/oauth2'
 end
 ```
 
