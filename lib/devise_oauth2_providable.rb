@@ -12,7 +12,7 @@ require 'devise/oauth2_providable/models/oauth2_refresh_token_grantable'
 require 'devise/oauth2_providable/models/oauth2_authorization_code_grantable'
 
 module Devise
-  module Oauth2Providable
+  module OAuth2
     CLIENT_ENV_REF = 'oauth2.client'
     REFRESH_TOKEN_ENV_REF = "oauth2.refresh_token"
 
@@ -27,7 +27,7 @@ module Devise
   end
 end
 
-Devise.add_module(:oauth2_providable,
+Devise.add_module(:oauth2,
   :strategy => true,
   :model => 'devise/oauth2_providable/models/oauth2_providable')
 Devise.add_module(:oauth2_password_grantable, 

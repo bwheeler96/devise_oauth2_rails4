@@ -1,5 +1,5 @@
 module Devise
-  module Oauth2Providable
+  module OAuth2
     class AuthorizationsController < ApplicationController
 
       before_action :authenticate_user!

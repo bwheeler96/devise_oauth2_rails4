@@ -1,4 +1,4 @@
-class Devise::Oauth2Providable::RefreshToken < ActiveRecord::Base
+class Devise::OAuth2::RefreshToken < ActiveRecord::Base
   expires_according_to :refresh_token_expires_in
 
   # Deprecated

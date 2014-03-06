@@ -1,9 +1,9 @@
 class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
   def change
     create_table :oauth2_clients do |t|
-      t.string :name
+      t.string :owner_type
+      t.integer :owner
       t.string :redirect_uri
-      t.string :website
       t.string :identifier
       t.string :secret
       t.boolean :passthrough, default: false, null: false
@@ -14,7 +14,10 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
     end
 
     create_table :oauth2_access_tokens do |t|
-      t.belongs_to :user, :client, :refresh_token
+      t.string :owner_type
+      t.integer :owner_id
+      t.integer :client_id
+      t.integer :refresh_token_id
       t.string :token
       t.datetime :expires_at
       t.timestamps

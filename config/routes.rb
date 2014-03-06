@@ -1,4 +1,4 @@
-Devise::Oauth2Providable::Engine.routes.draw do
+Devise::OAuth2::Engine.routes.draw do
   root :to => "authorizations#new"
 
   resources :authorizations, :only => :create

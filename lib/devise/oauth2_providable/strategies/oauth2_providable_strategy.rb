@@ -22,4 +22,4 @@ module Devise
   end
 end
 
-Warden::Strategies.add(:oauth2_providable, Devise::Strategies::Oauth2Providable)
+Warden::Strategies.add(:oauth2, Devise::Strategies::Oauth2Providable)
