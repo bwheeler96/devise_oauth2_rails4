@@ -8,8 +8,13 @@ class Devise::Oauth2::Client < ActiveRecord::Base
   before_validation :init_secret, :on => :create, :unless => :secret?
   validates :identifier, :presence => true, :uniqueness => true
 
-  # Deprecated
-  #attr_accessible :name, :website, :redirect_uri
+  serialize :default_permissions
+
+  def default_permissions=(permissions)
+    super(permissions) if permissions.is_a? Array
+    permissions = permissions.split(/[,\s\n\b\t]/).keep_if { |x| !x.blank? } if permissions.is_a? String
+    super(permissions)
+  end
 
   private
 

@@ -44,7 +44,7 @@ module Devise
                     authorization_code = current_user.authorization_codes.create!(:client => @client)
                     res.code = authorization_code.token
                   when :token
-                    access_token = current_user.access_tokens.create!(:client => @client).token
+                    access_token = current_user.access_tokens.create!(:client => @client, permissions: requested_permissions).token
                     bearer_token = Rack::OAuth2::AccessToken::Bearer.new(:access_token => access_token)
                     res.access_token = bearer_token
                     # res.uid = current_user.id
@@ -60,6 +60,10 @@ module Devise
         end
 
         respond *authorization.call(request.env)
+      end
+
+      def requested_permissions
+        params[:permissions] || @client.default_permissions
       end
 
     end

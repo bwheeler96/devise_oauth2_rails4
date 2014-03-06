@@ -4,8 +4,13 @@ class Devise::Oauth2::AccessToken < ActiveRecord::Base
   before_validation :restrict_expires_at, :on => :create, :if => :refresh_token
   belongs_to :refresh_token
 
-  # Deprecated
-  #attr_accessible :refresh_token
+  serialize :permissions
+
+  def permissions=(permissions)
+    super(permissions) if permissions.is_a? Array
+    permissions = permissions.split(/[,\s\n\b\t]/).keep_if { |x| !x.empty? } if permissions.is_a? String
+    super(permissions)
+  end
 
   def token_response
     response = {

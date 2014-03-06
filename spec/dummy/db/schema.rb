@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20140306063000) do
   create_table "oauth2_access_tokens", force: true do |t|
     t.integer  "owner_id"
     t.string   "owner_type"
+    t.text     "permissions"
     t.integer  "client_id"
     t.integer  "refresh_token_id"
     t.string   "token"
@@ -47,10 +48,11 @@ ActiveRecord::Schema.define(version: 20140306063000) do
   create_table "oauth2_clients", force: true do |t|
     t.integer  "owner_id"
     t.string   "owner_type"
+    t.text     "default_permissions"
     t.string   "redirect_uri"
     t.string   "identifier"
     t.string   "secret"
-    t.boolean  "passthrough",  default: false, null: false
+    t.boolean  "passthrough",         default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

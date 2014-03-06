@@ -2,6 +2,7 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
   def change
     create_table :oauth2_clients do |t|
       t.belongs_to :owner, polymorphic: true
+      t.text :default_permissions
       t.string :redirect_uri
       t.string :identifier
       t.string :secret
@@ -14,6 +15,7 @@ class CreateDeviseOauth2ProvidableSchema < ActiveRecord::Migration
 
     create_table :oauth2_access_tokens do |t|
       t.belongs_to :owner, polymorphic: true
+      t.text :permissions
       t.integer :client_id
       t.integer :refresh_token_id
       t.string :token
