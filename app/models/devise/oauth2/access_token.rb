@@ -22,6 +22,15 @@ class Devise::Oauth2::AccessToken < ActiveRecord::Base
     response
   end
 
+  def method_missing(method)
+    if method.to_s.match /^can_.*\?$/
+      permission = method.to_s.match(/^can_(.*)\?$/)[1]
+      return true if permission.in? self.permissions
+      return false
+    end
+    super(method)
+  end
+
   private
 
   def restrict_expires_at

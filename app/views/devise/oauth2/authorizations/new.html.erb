@@ -1,4 +1,8 @@
 <h2>Authorize app to to access your resources?</h2>
 
+<% if params[:permissions] || @client.default_permissions %>
+    <h4>Test</h4>
+<% end %>
+
 <%= render 'devise/oauth2/authorizations/form', :client => @client, :response_type => @response_type, :redirect_uri => @redirect_uri, :action => :approve %>
 <%= render 'devise/oauth2/authorizations/form', :client => @client, :response_type => @response_type, :redirect_uri => @redirect_uri, :action => :deny %>
