@@ -9,7 +9,7 @@ module Devise
       module ClassMethods
         def expires_according_to(config_name)
           cattr_accessor :default_lifetime
-          self.default_lifetime = Rails.application.config.devise_oauth2_providable[config_name]
+          self.default_lifetime = Rails.application.config.devise_oauth2_rails4[config_name]
 
           belongs_to :user
           belongs_to :client
@@ -45,7 +45,7 @@ module Devise
         private
 
         def init_token
-          self.token = Devise::Oauth2Providable.random_id
+          self.token = Devise::OAuth2.random_id
         end
         def init_expires_at
           self.expires_at = self.default_lifetime.from_now
@@ -55,4 +55,4 @@ module Devise
   end
 end
 
-ActiveRecord::Base.send :include, Devise::Oauth2Providable::ExpirableToken
+ActiveRecord::Base.send :include, Devise::OAuth2::ExpirableToken

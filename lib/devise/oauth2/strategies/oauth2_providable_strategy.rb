@@ -9,8 +9,8 @@ module Devise
       end
       def authenticate!
         @req.setup!
-        token = Devise::Oauth2Providable::AccessToken.find_by_token @req.access_token
-        env[Devise::Oauth2Providable::CLIENT_ENV_REF] = token.client if token
+        token = Devise::OAuth2::AccessToken.find_by_token @req.access_token
+        env[Devise::OAuth2::CLIENT_ENV_REF] = token.client if token
         resource = token ? token.user : nil
         if validate(resource)
           success! resource
