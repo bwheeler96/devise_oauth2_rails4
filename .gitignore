@@ -7,6 +7,9 @@ rdoc
 # RubyMine
 /.idea
 
+# Ignore self.gem
+/*.gem
+
 # yard generated
 doc
 .yardoc
