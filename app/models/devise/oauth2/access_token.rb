@@ -4,6 +4,7 @@ class Devise::Oauth2::AccessToken < ActiveRecord::Base
   before_validation :restrict_expires_at, :on => :create, :if => :refresh_token
   belongs_to :refresh_token
 
+  belongs_to :owner, polymorphic: true
   serialize :permissions
 
   def permissions=(permissions)
@@ -22,13 +23,13 @@ class Devise::Oauth2::AccessToken < ActiveRecord::Base
     response
   end
 
-  def method_missing(method)
+  def method_missing(method, *args, &block)
     if method.to_s.match /^can_.*\?$/
       permission = method.to_s.match(/^can_(.*)\?$/)[1]
       return true if permission.in? self.permissions
       return false
     end
-    super(method)
+    super(method, *args, &block)
   end
 
   private
