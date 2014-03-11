@@ -5,6 +5,7 @@ module Devise
       #include ::PermissionsHelper
 
       before_action :authenticate_user!
+      around_action :perform_callbacks
 
       rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|
         @error = e
@@ -51,8 +52,12 @@ module Devise
                     res.access_token = bearer_token
                     # res.uid = current_user.id
                 end
+                after_allowed_authorization if defined? after_allowed_authorization
+                return if performed?
                 res.approve!
               else
+                after_denied_authorization if defined? after_denied_authorization
+                return if performed?
                 req.access_denied!
               end
             else
@@ -66,6 +71,14 @@ module Devise
 
       def requested_permissions
         params[:permissions] || @client.default_permissions
+      end
+
+      def perform_callbacks
+
+        before_authorize if defined? before_authorize
+        return if performed?
+        yield
+        after_authorize if defined? after_authorize
       end
 
     end
