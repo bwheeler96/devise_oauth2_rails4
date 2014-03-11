@@ -23,13 +23,8 @@ class Devise::Oauth2::AccessToken < ActiveRecord::Base
     response
   end
 
-  def method_missing(method, *args, &block)
-    if method.to_s.match /^can_.*\?$/
-      permission = method.to_s.match(/^can_(.*)\?$/)[1]
-      return true if permission.in? self.permissions
-      return false
-    end
-    super(method, *args, &block)
+  def can?(do_permission)
+    do_permission.to_s.in? Array(self.permissions)
   end
 
   private
