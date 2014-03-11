@@ -136,9 +136,11 @@ http://localhost:3000/oauth/authorize?client_id=my_client_id&response_type=token
 
 ### Checking Permissions
 
+```ruby
 @access_token = Devise::Oauth2::AccessToken.find_by_token('my_access_token')
 @access_token.can? :read_feed
 # => true
+```
 
 
 ## Grant Types
