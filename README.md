@@ -1,6 +1,6 @@
 # devise_oauth2_providable
 
-Rails3 engine that brings OAuth2 Provider support to your application.
+Rails 4 engine that brings OAuth2 Provider support to your application.
 
 Current OAuth2 Specification Draft:
 http://tools.ietf.org/html/draft-ietf-oauth-v2-22
@@ -103,7 +103,7 @@ expires after 1min by default. to customize the duration of the
 authorization code:
 
 ```ruby
-Devise::Oauth2Providable::AuthorizationCode.default_lifetime = 5.minutes
+Devise::Oauth2::AuthorizationCode.default_lifetime = 5.minutes
 ```
 
 ## Routes
@@ -121,6 +121,25 @@ http://tools.ietf.org/html/draft-ietf-oauth-v2-15#section-2.2
 
 Endpoint to request access token.  See grant type documentation for
 supported flows.
+
+## Permissions
+
+Rails 4 version of this gem adds support for dynamic permissions!
+
+In the `Client` model, there is a field for `default_permissions`, which each access_token
+will inherit from by default. Much like the Facebook Graph API, clients can specify the permissions
+on a request-per-request basis.
+
+```
+http://localhost:3000/oauth/authorize?client_id=my_client_id&response_type=token&permissions=read_feed,post_to_wall,edit_profile
+```
+
+### Checking Permissions
+
+@access_token = Devise::Oauth2::AccessToken.find_by_token('my_access_token')
+@access_token.can? :read_feed
+# => true
+
 
 ## Grant Types
 
