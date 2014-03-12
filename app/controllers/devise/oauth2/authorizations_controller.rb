@@ -4,7 +4,7 @@ module Devise
 
       #include ::PermissionsHelper
 
-      #before_action :authenticate_user!
+      before_action "authenticate_#{Rails.application.config.devise_oauth2_rails4.devise_scope}!"
       around_action :perform_callbacks
 
       rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|

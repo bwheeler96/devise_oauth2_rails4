@@ -5,7 +5,7 @@ module Devise
       config.devise_oauth2_rails4.access_token_expires_in       = 15.minutes
       config.devise_oauth2_rails4.refresh_token_expires_in      = 1.month
       config.devise_oauth2_rails4.authorization_code_expires_in = 1.minute
-
+      config.devise_oauth2_rails4.devise_scope = :user
       engine_name 'oauth2'
       isolate_namespace Devise::Oauth2
       initializer "devise_oauth2_rails4.initialize_application", :before=> :load_config_initializers do |app|
