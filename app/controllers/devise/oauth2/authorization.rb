@@ -10,7 +10,7 @@ module Devise
       end
 
       def current_access_token
-        @access_token ||= AccessToken.find_by(token: access_token) if accesss_token?
+        @access_token ||= AccessToken.find_by(token: access_token) if access_token?
       end
 
 			def valid_access_token?
