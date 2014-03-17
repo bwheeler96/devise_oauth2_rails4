@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
-  describe 'POST /oauth2/token' do
+  describe 'POST /oauth/token' do
     describe 'with grant_type=refresh_token' do
       context 'with valid params' do
         with :client
         with :user
         before do
-          @refresh_token = client.refresh_tokens.create! :user => user
+          @refresh_token = client.refresh_tokens.create! owner: user, client: client
           params = {
             :grant_type => 'refresh_token',
             :client_id => client.identifier,
@@ -15,13 +15,13 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
             :refresh_token => @refresh_token.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 200 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2::AccessToken.last
           refresh_token = @refresh_token
+          token = Devise::Oauth2::AccessToken.last # create!(owner: user, refresh_token: refresh_token, client: client)
           expected = {
             :token_type => 'bearer',
             :expires_in => 899,
@@ -36,17 +36,17 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         with :client
         before do
           timenow = 2.days.from_now
-          Time.stub!(:now).and_return(timenow)
-          @refresh_token = client.refresh_tokens.create! :user => user
+          Time.stub(:now).and_return(timenow)
+          @refresh_token = client.refresh_tokens.create! owner: user
           params = {
             :grant_type => 'refresh_token',
             :client_id => client.identifier,
             :client_secret => client.secret,
             :refresh_token => @refresh_token.token
           }
-          Time.stub!(:now).and_return(timenow + 2.months)
+          Time.stub(:now).and_return(timenow + 2.months)
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -62,7 +62,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         with :user
         with :client
         before do
-          @refresh_token = client.refresh_tokens.create! :user => user
+          @refresh_token = client.refresh_tokens.create! owner: user
           params = {
             :grant_type => 'refresh_token',
             :client_id => client.identifier,
@@ -70,7 +70,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
             :refresh_token => 'invalid'
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -88,7 +88,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         with :user
         with :client
         before do
-          @refresh_token = client.refresh_tokens.create! :user => user
+          @refresh_token = client.refresh_tokens.create! owner: user
           params = {
             :grant_type => 'refresh_token',
             :client_id => 'invalid',
@@ -96,7 +96,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
             :refresh_token => @refresh_token.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -112,7 +112,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
         with :user
         with :client
         before do
-          @refresh_token = client.refresh_tokens.create! :user => user
+          @refresh_token = client.refresh_tokens.create! owner: user
           params = {
             :grant_type => 'refresh_token',
             :client_id => client.identifier,
@@ -120,7 +120,7 @@ describe Devise::Strategies::Oauth2RefreshTokenGrantTypeStrategy do
             :refresh_token => @refresh_token.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }

@@ -42,19 +42,53 @@ module Devise
       end
 
       def client_id
-        params[:client_id]
+        params[:client_id] if params[:client_id]
       end
 
       def client_id?
-        !!params[:client_id]
+        !!client_id
+      end
+
+      def auth_code
+        params[:code]
+      end
+
+      def code?
+        !!auth_code
+      end
+
+      def refresh_token
+        params[:refresh_token] if params[:refresh_token]
+      end
+
+      def refresh_token?
+        !!refresh_token
       end
 
       def access_token
-        params[:access_token]
+        return params[:access_token] if params[:access_token]
+        request.headers['HTTP_AUTHORIZATION'].split(' ')[-1] if request.headers['HTTP_AUTHORIZATION']
       end
 
       def access_token?
         !!access_token
+      end
+
+      def authenticate_anyone!
+        render json: { error: 'Valid user credentials must be submitted with this request.' }, status: 401 unless current_anything || params[:refresh_token] || params[:code]
+      end
+
+      def devise_scope_name
+        Rails.application.config.devise_oauth2_rails4.devise_scope
+      end
+
+      define_method "current_#{Rails.application.config.devise_oauth2_rails4.devise_scope}" do
+        return super() if super()
+        return send current_access_token.owner if current_access_token
+      end
+
+      def current_anything
+        send "current_#{devise_scope_name}"
       end
 
     end

@@ -17,9 +17,9 @@ module Devise
 
       def authenticate!
         client_id, client_secret = request.authorization ? decode_credentials : [params[:client_id], params[:client_secret]]
-        client = Devise::Oauth2Providable::Client.find_by_identifier client_id
+        client = Devise::Oauth2::Client.find_by_identifier client_id
         if client && client.secret == client_secret
-          env[Devise::Oauth2Providable::CLIENT_ENV_REF] = client
+          env[Devise::Oauth2::CLIENT_ENV_REF] = client
           authenticate_grant_type(client)
         else
           oauth_error! :invalid_client, 'invalid client credentials'

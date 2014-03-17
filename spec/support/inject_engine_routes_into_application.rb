@@ -1,6 +1,6 @@
 # see http://www.builtfromsource.com/2011/09/21/testing-routes-with-rails-3-1-engines/
 module Devise
-  module Oauth2Providable
+  module Oauth2
     module EngineHacks
       ##
       # Automatically append all of the current engine's routes to the main
@@ -23,7 +23,7 @@ module Devise
         engine = ("#{engine_name}::Engine").constantize
 
         engine_name = 'oauth2'
-        engine = Devise::Oauth2Providable::Engine
+        engine = Devise::Oauth2::Engine
         named_routes   = engine.routes.named_routes.routes
         resourced_routes = []
 
@@ -71,4 +71,4 @@ module Devise
   end
 end
 
-# Rails::Engine.send(:include, Devise::Oauth2Providable::EngineHacks)
+# Rails::Engine.send(:include, Devise::Oauth2::EngineHacks)

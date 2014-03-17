@@ -6,7 +6,7 @@ describe ProtectedController do
     with :client
     with :user
     before do
-      @token = Devise::Oauth2::AccessToken.create! :client => client, :user => user
+      @token = Devise::Oauth2::AccessToken.create! :client => client, :owner => user
     end
     context 'with valid bearer token in header' do
       before do
@@ -27,16 +27,6 @@ describe ProtectedController do
         get :index, :access_token => 'invalid', :format => 'json'
       end
       it { should respond_with :unauthorized }
-    end
-    context 'with valid bearer token in header and query string' do
-      before do
-      end
-      it 'raises error' do
-        lambda {
-          @request.env['HTTP_AUTHORIZATION'] = "Bearer #{@token.token}"
-          get :index, :access_token => @token.token, :format => 'json'
-        }.should raise_error
-      end
     end
   end
 end

@@ -2,7 +2,8 @@ module Devise
   module Oauth2
     class AuthorizationsController < ApplicationController
 
-      #include ::PermissionsHelper
+      before_action :authenticate_anyone!
+      include Devise::Oauth2::Authorization
 
       before_action "authenticate_#{Rails.application.config.devise_oauth2_rails4.devise_scope}!"
       around_action :perform_callbacks
@@ -44,10 +45,10 @@ module Devise
               if params[:approve].present? || @client.passthrough?
                 case req.response_type
                   when :code
-                    authorization_code = current_user.authorization_codes.create!(:client => @client)
+                    authorization_code = current_anything.authorization_codes.create!(:client => @client)
                     res.code = authorization_code.token
                   when :token
-                    access_token = current_user.access_tokens.create!(:client => @client, permissions: requested_permissions).token
+                    access_token = current_anything.access_tokens.create!(:client => @client, permissions: requested_permissions).token
                     bearer_token = Rack::OAuth2::AccessToken::Bearer.new(:access_token => access_token)
                     res.access_token = bearer_token
                     # res.uid = current_user.id

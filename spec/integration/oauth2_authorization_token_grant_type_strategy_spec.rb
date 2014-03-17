@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
-  describe 'POST /oauth2/token' do
+  describe 'POST /oauth/token' do
     describe 'with grant_type=authorization_code' do
       context 'with valid params' do
         with :client
         with :user
         before do
-          @authorization_code = user.authorization_codes.create!(:client => client, :redirect_uri => client.redirect_uri)
+          @authorization_code = user.authorization_codes.create!(:client => client, owner: user) #, :redirect_uri => client.redirect_uri)
           params = {
             :grant_type => 'authorization_code',
             :client_id => client.identifier,
@@ -15,13 +15,13 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
             :code => @authorization_code.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 200 }
         it { response.content_type.should == 'application/json' }
         it 'returns json' do
-          token = Devise::Oauth2::AccessToken.last
-          refresh_token = Devise::Oauth2::RefreshToken.last
+          token = Devise::Oauth2::AccessToken.last # create(owner: user, client: client)
+          refresh_token = Devise::Oauth2::RefreshToken.last # .create(owner: user, client: client)
           expected = {
             :token_type => 'bearer',
             :expires_in => 899,
@@ -36,17 +36,17 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
         with :user
         before do
           timenow = 2.days.from_now
-          Time.stub!(:now).and_return(timenow)
-          @authorization_code = user.authorization_codes.create(:client_id => client, :redirect_uri => client.redirect_uri)
+          Time.stub(:now).and_return(timenow)
+          @authorization_code = user.authorization_codes.create(:client_id => client) #, :redirect_uri => client.redirect_uri)
           params = {
             :grant_type => 'authorization_code',
             :client_id => client.identifier,
             :client_secret => client.secret,
             :code => @authorization_code.token
           }
-          Time.stub!(:now).and_return(timenow + 10.minutes)
+          Time.stub(:now).and_return(timenow + 10.minutes)
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -62,7 +62,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
         with :client
         with :user
         before do
-          @authorization_code = user.authorization_codes.create(:client_id => client, :redirect_uri => client.redirect_uri)
+          @authorization_code = user.authorization_codes.create(:client_id => client) #, :redirect_uri => client.redirect_uri)
           params = {
             :grant_type => 'authorization_code',
             :client_id => client.identifier,
@@ -70,7 +70,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
             :code => 'invalid'
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -86,7 +86,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
         with :user
         with :client
         before do
-          @authorization_code = user.authorization_codes.create(:client_id => client, :redirect_uri => client.redirect_uri)
+          @authorization_code = user.authorization_codes.create(:client_id => client) #, :redirect_uri => client.redirect_uri)
           params = {
             :grant_type => 'authorization_code',
             :client_id => client.identifier,
@@ -94,7 +94,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
             :code => @authorization_code.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
@@ -110,7 +110,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
         with :user
         with :client
         before do
-          @authorization_code = user.authorization_codes.create(:client_id => client, :redirect_uri => client.redirect_uri)
+          @authorization_code = user.authorization_codes.create(:client_id => client) #, :redirect_uri => client.redirect_uri)
           params = {
             :grant_type => 'authorization_code',
             :client_id => 'invalid',
@@ -118,7 +118,7 @@ describe Devise::Strategies::Oauth2AuthorizationCodeGrantTypeStrategy do
             :code => @authorization_code.token
           }
 
-          post '/oauth2/token', params
+          post '/oauth/token', params
         end
         it { response.code.to_i.should == 400 }
         it { response.content_type.should == 'application/json' }
